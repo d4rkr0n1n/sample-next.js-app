@@ -24,10 +24,10 @@ jobs:
         id: extract_version
         run: |
           echo "version=v0.`expr ${{ github.run_number }} % 10`.`expr ${{ github.run_number }} / 10`" >> $GITHUB_OUTPUT
+      - name: testing
+        run: echo "${{ steps.extract_version.outputs.version }}"
       - name: Build image
         run: docker build .
-      - name: testing
-        run: echo {{ steps.extract_version.outputs.version }}
   
   publish:
     runs-on: ubuntu-latest
