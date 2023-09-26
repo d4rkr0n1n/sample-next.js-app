@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - development
-
 jobs:
   build:
     name: build
@@ -14,6 +13,12 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - env:
+          NUM: ${{ github.run_number }}
+      
+
+      - name: Run a one-line script
+        run: echo $NUM
 
       - name: Build image
         run: docker build .
