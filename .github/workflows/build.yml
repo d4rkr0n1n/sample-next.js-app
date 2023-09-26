@@ -13,12 +13,14 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: run number with offset
-        env:
-          NUM: ${{ github.run_number }}
+      - name: Set the value
+        id: step_one
         run: |
-          echo ::set-env name=GITHUB_RUN_NUMBER_WITH_OFFSET::$(($NUM+200))
-      - run: echo $GITHUB_RUN_NUMBER_WITH_OFFSET
+          echo "action_state=yellow" >> "$GITHUB_ENV"
+      - name: Use the value
+        id: step_two
+        run: |
+          printf '%s\n' "$action_state" # This will output 'yellow'
 
       - name: Build image
         run: docker build .
