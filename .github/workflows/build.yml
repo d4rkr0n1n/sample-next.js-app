@@ -16,11 +16,11 @@ jobs:
       - name: Set the value
         id: step_one
         run: |
-          echo "action_state=${{ github.run_number }}" >> "$GITHUB_ENV"
+          echo "patch_version=`expr ${{ github.run_number }} / 10`" >> "$GITHUB_ENV"
       - name: Use the value
         id: step_two
         run: |
-          printf '%s\n' "$action_state" # This will output 'yellow'
+          printf '%s\n' "$patch_version"
 
       - name: Build image
         run: docker build .
