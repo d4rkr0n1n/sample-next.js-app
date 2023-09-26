@@ -20,12 +20,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Get version
-        id: extract_version
-        run: |
-          echo "version=v0.`expr ${{ github.run_number }} % 10`.`expr ${{ github.run_number }} / 10`" >> $GITHUB_OUTPUT
-      - name: testing
-        run: echo "${{ steps.extract_version.outputs.version }}"
       - name: Build image
         run: docker build .
   
@@ -60,7 +54,7 @@ jobs:
     - name: Get version
       id: extract_version
       run: |
-        echo "version=v0.`expr ${{ github.run_number }} % 10`.`expr ${{ github.run_number }} / 10`" >> $GITHUB_OUTPUT
+        echo "version=v0.`expr ${{ github.run_number }} / 10`.`expr ${{ github.run_number }} % 10`" >> $GITHUB_OUTPUT
           
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
