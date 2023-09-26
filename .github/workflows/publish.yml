@@ -44,5 +44,5 @@ jobs:
         context: .
         push: true
         # target: local
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: ${{ steps.meta.outputs.tags }}-${{ GITHUB_RUN_NUMBER }}
         labels: ${{ steps.meta.outputs.labels }}
