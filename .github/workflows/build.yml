@@ -20,14 +20,14 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-
+      - name: Get version
+        id: extract_version
+        run: |
+          echo "version=v0.`expr ${{ github.run_number }} % 10`.`expr ${{ github.run_number }} / 10`" >> $GITHUB_OUTPUT
+      - name: testing
+        run: echo "${{ steps.extract_version.outputs.version }}"
       - name: Build image
         run: docker build .
-
-      - run: echo This event is a pull request.
-        if: ${{ github.event_name == 'pull_request' }}
-      - run: echo This event is a push.
-        if: ${{ github.event_name == 'push' }}
   
   publish:
     runs-on: ubuntu-latest
@@ -58,22 +58,17 @@ jobs:
        uses: docker/setup-buildx-action@v3
        
     - name: Get version
-      id: version
+      id: extract_version
       run: |
-        echo "patch_version=`expr ${{ github.run_number }} % 10`" >> $GITHUB_OUTPUT
-        echo "minor_version=`expr ${{ github.run_number }} / 10`" >> $GITHUB_OUTPUT
-    # - name: Use the value
-    #   id: step_two
-    #   run: |
-    #     printf '%s\n' "$patch_version"
-    #     printf '%s\n' "$minor_version"
+        echo "version=v0.`expr ${{ github.run_number }} % 10`.`expr ${{ github.run_number }} / 10`" >> $GITHUB_OUTPUT
+          
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
         # target: local
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v0.${{ steps.version.outputs.minor_version }}.${{ steps.version.outputs.patch_version }}
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_version.outputs.version }}
         labels: ${{ steps.meta.outputs.labels }}
     - name: Create Release
       id: create_release
@@ -81,7 +76,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v0.${{ steps.version.outputs.minor_version }}.${{ steps.version.outputs.patch_version }}
-        release_name: Release v0.${{ steps.version.outputs.minor_version }}.${{ steps.version.outputs.patch_version }}
+        tag_name: ${{ steps.extract_version.outputs.version }}
+        release_name: Release ${{ steps.extract_version.outputs.version }}
         draft: false
         prerelease: false
