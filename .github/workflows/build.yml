@@ -13,12 +13,12 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - env:
+      - name: run number with offset
+        env:
           NUM: ${{ github.run_number }}
-      
-
-      - name: Run a one-line script
-        run: echo $NUM
+        run: |
+          echo ::set-env name=GITHUB_RUN_NUMBER_WITH_OFFSET::$(($NUM+200))
+      - run: echo $GITHUB_RUN_NUMBER_WITH_OFFSET
 
       - name: Build image
         run: docker build .
