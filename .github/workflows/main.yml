@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  push:
+  build:
+    name: build
     runs-on: ubuntu-latest
     permissions:
       packages: write
