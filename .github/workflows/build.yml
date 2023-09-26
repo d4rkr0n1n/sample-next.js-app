@@ -26,3 +26,9 @@ jobs:
 
       - name: Build image
         run: docker build .
+
+      - run: echo This event is a pull request.
+        if: ${{ github.event_name == 'pull_request' }}
+      - run: echo This event is a push.
+        if: ${{ github.event_name == 'push' }}
+
