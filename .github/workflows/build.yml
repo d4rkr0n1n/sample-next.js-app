@@ -3,7 +3,7 @@ name: Demo Push
 on:
   pull_request:
     branches:
-      - main
+      - development
 
 jobs:
   build:
