@@ -73,7 +73,7 @@ jobs:
         context: .
         push: true
         # target: local
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v0.${{ steps.version.outputs.minor_version }}.${{ steps.version.outputs.patch_version }}
         labels: ${{ steps.meta.outputs.labels }}
     - name: Create Release
       id: create_release
@@ -81,7 +81,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v0.${{ steps.version.outputs.patch_version }}.${{ steps.version.outputs.minor_version }}
-        release_name: Release v0.0.${{ github.run_number }}
+        tag_name: v0.${{ steps.version.outputs.minor_version }}.${{ steps.version.outputs.patch_version }}
+        release_name: Release v0.${{ steps.version.outputs.minor_version }}.${{ steps.version.outputs.patch_version }}
         draft: false
         prerelease: false
