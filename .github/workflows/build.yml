@@ -1,9 +1,10 @@
 name: Demo Push
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - development
+    branches: [ "development" ]
 jobs:
   build:
     name: build
