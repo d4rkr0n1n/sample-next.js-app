@@ -1,9 +1,10 @@
 name: Demo Push
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
-    branches:
-      - development
+    branches: [ "development" ]
 jobs:
   build:
     name: build
@@ -13,12 +14,15 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - env:
-          NUM: ${{ github.run_number }}
-      
-
-      - name: Run a one-line script
-        run: echo $NUM
+      - name: Get version
+        run: |
+          echo "patch_version=`expr ${{ github.run_number }} % 10`" >> "$GITHUB_ENV"
+          echo "minor_version=`expr ${{ github.run_number }} / 10`" >> "$GITHUB_ENV"
+      - name: Use the value
+        id: step_two
+        run: |
+          printf '%s\n' "$patch_version"
+          printf '%s\n' "$minor_version"
 
       - name: Build image
         run: docker build .
